@@ -21,7 +21,6 @@ alto_pantalla = ventana.winfo_screenheight()
 # Configurar ventana principal
 ventana.geometry(f"{ancho_pantalla}x{alto_pantalla}+0+0")
 ventana.title("Miel")
-ventana.iconbitmap(".gitignore\hogar.ico")
 ventana.configure(bg="gray16")
 ventana.resizable(True, True)
 ventana.attributes("-alpha", 1)

@@ -1,11 +1,11 @@
 class Clientes:
     def __init__(self, nombre_completo, localidad, telefono, cantidad_colmenas, codigo_renapa, factura_produccion):
-        self.set_nombre_completo(nombre_completo)
-        self.set_localidad(localidad)
-        self.set_telefono(telefono)
-        self.set_cantidad_colmenas(cantidad_colmenas)
-        self.set_codigo_renapa(codigo_renapa)
-        self.set_factura_produccion(factura_produccion)
+        self._nombre_completo = nombre_completo
+        self._localidad = localidad
+        self._telefono = telefono
+        self._cantidad_colmenas = cantidad_colmenas
+        self._codigo_renapa = codigo_renapa
+        self._factura_produccion = factura_produccion
 
 
     # Getter y Setter para nombre_completo
