@@ -13,7 +13,7 @@ class Producto:
         if isinstance(nombre, str) and nombre.strip():
             self._nombre = nombre.strip()
         else:
-            raise ValueError("El nombre del producto debe ser un string no vacío.")
+            raise ValueError("El nombre del producto debe ser un texto no vacío.")
 
     # Getter y Setter para tipo
     def get_tipo(self):
@@ -23,7 +23,7 @@ class Producto:
         if isinstance(tipo, str) and tipo.strip():
             self._tipo = tipo.strip()
         else:
-            raise ValueError("El tipo de producto debe ser un string no vacío.")
+            raise ValueError("El tipo de producto debe ser un texto no vacío.")
 
     # Getter y Setter para cantidad
     def get_cantidad(self):
@@ -35,7 +35,7 @@ class Producto:
         elif isinstance(cantidad, (int, float)):
             self._cantidad = float(cantidad)
         else:
-            raise ValueError("La cantidad debe ser un número (float) o estar vacía.")
+            raise ValueError("La cantidad debe ser un número o estar vacía.")
 
     # Getter y Setter para peso
     def get_peso(self):
@@ -47,7 +47,7 @@ class Producto:
         elif isinstance(peso, (int, float)):
             self._peso = float(peso)
         else:
-            raise ValueError("El peso debe ser un número (float) o estar vacío.")
+            raise ValueError("El peso debe ser un número o estar vacío.")
 
     def __str__(self):
         return (f"Producto: {self.get_nombre()}, Tipo: {self.get_tipo()}, "
