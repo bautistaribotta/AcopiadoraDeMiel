@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from datetime import datetime
 import sqlite3
-import os
 
 
 # ==================== BASE DE DATOS ====================
@@ -325,7 +324,7 @@ class Cliente:
 
     def get_datos_tabla(self):
         """Retorna tupla para mostrar en tabla"""
-        return (self.id_db, self.nombre, self.email, self.telefono, self.localidad)
+        return self.id_db, self.nombre, self.email, self.telefono, self.localidad
 
     @staticmethod
     def desde_db(tupla_db):
@@ -361,7 +360,7 @@ class Producto:
 
     def get_datos_tabla(self):
         """Retorna tupla para mostrar en tabla"""
-        return (self.codigo, self.nombre, self.categoria, f"${self.precio:,.2f}", self.stock)
+        return self.codigo, self.nombre, self.categoria, f"${self.precio:,.2f}", self.stock
 
     @staticmethod
     def desde_db(tupla_db):
@@ -393,7 +392,7 @@ class Remito:
 
     def get_datos_tabla(self):
         """Retorna tupla para mostrar en tabla"""
-        return (self.numero, self.fecha, self.cliente, f"${self.total:,.2f}", self.estado)
+        return self.numero, self.fecha, self.cliente, f"${self.total:,.2f}", self.estado
 
     @staticmethod
     def desde_db(tupla_db):
@@ -837,10 +836,11 @@ class AppGestion:
     """Aplicación principal"""
 
     def __init__(self, root):
-        self.root = root
-        self.root.title("Sistema de Gestión Apícola")
-        self.root.geometry("1200x700")
-        self.root.configure(bg='#D4A017')  # LÍNEA 677 - Color miel (fondo ventana)
+        self.ventana = root
+        self.ventana.title("Sistema de gestion - Apicultura Mario Merlo")
+        self.ventana.state('zoomed')
+        self.ventana.configure(bg='#D4A017')  # LÍNEA 677 - Color miel (fondo ventana)
+        self.ventana.iconbitmap("colmena.ico")
 
         # Inicializar base de datos
         self.db = BaseDatos()
@@ -888,11 +888,11 @@ class AppGestion:
         self.crear_pestanas()
 
     def crear_header(self):
-        header_frame = tk.Frame(self.root, bg='#D4A017', height=70)  # LÍNEA 720 - Color miel (header)
+        header_frame = tk.Frame(self.ventana, bg='#D4A017', height=70)  # LÍNEA 720 - Color miel (header)
         header_frame.pack(fill='x')
         header_frame.pack_propagate(False)
 
-        tk.Label(header_frame, text="Sistema de Gestión Apícola",
+        tk.Label(header_frame, text="Sistema de gestion Apicultor - Mario Merlo",
                  font=('Segoe UI', 18, 'bold'),
                  bg='#D4A017', fg='white').pack(side='left', padx=30, pady=20)  # LÍNEA 726 - Color miel (bg label)
 
@@ -910,7 +910,7 @@ class AppGestion:
                   cursor='hand2').pack(side='left', padx=5)
 
     def crear_pestanas(self):
-        container = tk.Frame(self.root, bg='#D4A017')  # LÍNEA 742 - Color miel (container pestañas)
+        container = tk.Frame(self.ventana, bg='#D4A017')  # LÍNEA 742 - Color miel (container pestañas)
         container.pack(fill='both', expand=True, padx=2, pady=2)
 
         self.notebook = ttk.Notebook(container)
@@ -1011,7 +1011,7 @@ class AppGestion:
 
     def abrir_nuevo_cliente(self):
         """Abrir ventana para crear nuevo cliente"""
-        VentanaNuevoCliente(self.root, self.agregar_cliente)
+        VentanaNuevoCliente(self.ventana, self.agregar_cliente)
 
     def agregar_cliente(self, cliente):
         """Callback para agregar cliente a la tabla"""
@@ -1019,7 +1019,7 @@ class AppGestion:
 
     def abrir_historial_cliente(self, cliente):
         """Abrir ventana de historial de un cliente"""
-        VentanaHistorialCliente(self.root, cliente, self.db)
+        VentanaHistorialCliente(self.ventana, cliente, self.db)
 
 
 if __name__ == '__main__':

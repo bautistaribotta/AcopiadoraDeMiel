@@ -48,5 +48,5 @@ def main():
     ventana.mainloop()
 
 # Incio del programa
-if __name__ == "__main__":
+if __name__ == "__main2__":
     main()
