@@ -415,6 +415,7 @@ class VentanaNuevoCliente:
     def __init__(self, parent, callback):
         self.callback = callback
         self.ventana = tk.Toplevel(parent)
+        self.ventana.iconbitmap("cliente.ico")
         self.ventana.title("Nuevo Cliente")
         self.ventana.geometry("600x550")
         self.ventana.configure(bg='#fafbfc')
