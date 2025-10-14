@@ -1,54 +1,31 @@
 class Producto:
-    def __init__(self, nombre, tipo, cantidad=None, peso=None):
-        self.set_nombre = nombre
-        self.set_tipo = tipo
-        self.set_cantidad = cantidad
-        self.set_peso = peso
+    """Modelo de datos para Producto"""
+    contador_id = 1
 
-    # Getter y Setter para nombre
-    def get_nombre(self):
-        return self._nombre
+    def __init__(self, nombre, categoria, precio, stock, codigo=None, id_db=None):
+        self.id_db = id_db
+        self.codigo = codigo if codigo else f"PRD{str(Producto.contador_id).zfill(3)}"
+        if not codigo:
+            Producto.contador_id += 1
+        self.nombre = nombre
+        self.categoria = categoria
+        self.precio = precio
+        self.stock = stock
 
-    def set_nombre(self, nombre):
-        if isinstance(nombre, str) and nombre.strip():
-            self._nombre = nombre.strip()
-        else:
-            raise ValueError("El nombre del producto debe ser un texto no vacío.")
+    def get_datos_tabla(self):
+        """Retorna tupla para mostrar en tabla"""
+        return self.codigo, self.nombre, self.categoria, f"${self.precio:,.2f}", self.stock
 
-    # Getter y Setter para tipo
-    def get_tipo(self):
-        return self._tipo
+    @staticmethod
+    def desde_db(tupla_db):
+        """Crear objeto Producto desde tupla de base de datos"""
+        # tupla_db: (id, codigo, nombre, categoria, precio, stock, fecha_registro)
+        return Producto(
+            nombre=tupla_db[2],
+            categoria=tupla_db[3],
+            precio=tupla_db[4],
+            stock=tupla_db[5],
+            codigo=tupla_db[1],
+            id_db=tupla_db[0]
+        )
 
-    def set_tipo(self, tipo):
-        if isinstance(tipo, str) and tipo.strip():
-            self._tipo = tipo.strip()
-        else:
-            raise ValueError("El tipo de producto debe ser un texto no vacío.")
-
-    # Getter y Setter para cantidad
-    def get_cantidad(self):
-        return self._cantidad
-
-    def set_cantidad(self, cantidad):
-        if cantidad is None:
-            self._cantidad = None
-        elif isinstance(cantidad, (int, float)):
-            self._cantidad = float(cantidad)
-        else:
-            raise ValueError("La cantidad debe ser un número o estar vacía.")
-
-    # Getter y Setter para peso
-    def get_peso(self):
-        return self._peso
-
-    def set_peso(self, peso):
-        if peso is None:
-            self._peso = None
-        elif isinstance(peso, (int, float)):
-            self._peso = float(peso)
-        else:
-            raise ValueError("El peso debe ser un número o estar vacío.")
-
-    def __str__(self):
-        return (f"Producto: {self.get_nombre()}, Tipo: {self.get_tipo()}, "
-                f"Cantidad: {self.get_cantidad()}, Peso: {self.get_peso()}")

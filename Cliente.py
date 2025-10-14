@@ -1,72 +1,34 @@
-class Clientes:
-    def __init__(self, nombre_completo, localidad, telefono, cantidad_colmenas, codigo_renapa, factura_produccion):
-        self._nombre_completo = nombre_completo
-        self._localidad = localidad
-        self._telefono = telefono
-        self._cantidad_colmenas = cantidad_colmenas
-        self._codigo_renapa = codigo_renapa
-        self._factura_produccion = factura_produccion
+class Cliente:
+    """Modelo de datos para Cliente"""
 
+    def __init__(self, nombre, localidad, direccion="", colmenas=0, renapa="", factura=False, id_db=None):
+        self.id_db = id_db  # ID de la base de datos
+        self.nombre = nombre
+        self.email = f"{nombre.lower().replace(' ', '.')}@email.com"
+        self.localidad = localidad
+        self.direccion = direccion
+        self.colmenas = colmenas
+        self.renapa = renapa
+        self.factura = factura
+        self.telefono = "+54 351 000-0000"
 
-    # Getter y Setter para nombre_completo
-    def get_nombre_completo(self):
-        return self._nombre_completo
+    def get_datos_tabla(self):
+        """Retorna tupla para mostrar en tabla"""
+        return self.id_db, self.nombre, self.email, self.telefono, self.localidad
 
-    def set_nombre_completo(self, nombre):
-        if isinstance(nombre, str) and len(nombre.strip()) >= 3:
-            self._nombre_completo = nombre.strip()
-        else:
-            raise ValueError("El nombre completo debe ser un string con al menos 3 letras.")
-
-
-    # Getter y Setter para localidad
-    def get_localidad(self):
-        return self._localidad
-
-    def set_localidad(self, localidad):
-        if isinstance(localidad, str) and localidad.strip():
-            self._localidad = localidad.strip()
-        else:
-            raise ValueError("La localidad no puede estar vacía.")
-
-
-    # Getter y Setter para teléfono
-    def get_telefono(self):
-        return self._telefono
-
-    def set_telefono(self, telefono):
-        if isinstance(telefono, int):
-            self._telefono = telefono
-        else:
-            raise ValueError("El teléfono debe ser un número entero sin comas ni puntos.")
-
-
-    # Getter y Setter para cantidad_colmenas
-    def get_cantidad_colmenas(self):
-        return self._cantidad_colmenas
-
-    def set_cantidad_colmenas(self, cantidad):
-        if isinstance(cantidad, int) and cantidad >= 0:
-            self._cantidad_colmenas = cantidad
-        else:
-            raise ValueError("La cantidad de colmenas debe ser un número entero no negativo.")
-
-
-    # Getter y Setter para código RENAPA
-    def get_codigo_renapa(self):
-        return self._codigo_renapa
-
-    def set_codigo_renapa(self, codigo):
-        self._codigo_renapa = str(codigo).strip()
-
-
-    # Getter y Setter para factura de producción
-    def get_factura_produccion(self):
-        return self._factura_produccion
-
-    def set_factura_produccion(self, factura):
-        self._factura_produccion = str(factura).strip()
-
-    def __str__(self):
-        return (f"Cliente: {self.get_nombre_completo()}, Localidad: {self.get_localidad()}, Teléfono: {self.get_telefono()}, "
-                f"Colmenas: {self.get_cantidad_colmenas()}, RENAPA: {self.get_codigo_renapa()}, Factura: {self.get_factura_produccion()}")
+    @staticmethod
+    def desde_db(tupla_db):
+        """Crear objeto Cliente desde tupla de base de datos"""
+        # tupla_db: (id, nombre, email, telefono, localidad, direccion, colmenas, renapa, factura, fecha_registro)
+        cliente = Cliente(
+            nombre=tupla_db[1],
+            localidad=tupla_db[4],
+            direccion=tupla_db[5],
+            colmenas=tupla_db[6],
+            renapa=tupla_db[7],
+            factura=bool(tupla_db[8]),
+            id_db=tupla_db[0]
+        )
+        cliente.email = tupla_db[2]
+        cliente.telefono = tupla_db[3]
+        return cliente

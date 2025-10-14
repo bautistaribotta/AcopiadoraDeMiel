@@ -1,8 +1,10 @@
 import tkinter as tk
+from Cliente import Cliente
+from Producto import Producto
+from Remito import Remito
 from tkinter import ttk, messagebox
 from datetime import datetime
 import sqlite3
-
 
 # ==================== BASE DE DATOS ====================
 class BaseDatos:
@@ -307,107 +309,6 @@ class BaseDatos:
         self.desconectar()
 
 
-# ==================== MODELOS ====================
-class Cliente:
-    """Modelo de datos para Cliente"""
-
-    def __init__(self, nombre, localidad, direccion="", colmenas=0, renapa="", factura=False, id_db=None):
-        self.id_db = id_db  # ID de la base de datos
-        self.nombre = nombre
-        self.email = f"{nombre.lower().replace(' ', '.')}@email.com"
-        self.localidad = localidad
-        self.direccion = direccion
-        self.colmenas = colmenas
-        self.renapa = renapa
-        self.factura = factura
-        self.telefono = "+54 351 000-0000"
-
-    def get_datos_tabla(self):
-        """Retorna tupla para mostrar en tabla"""
-        return self.id_db, self.nombre, self.email, self.telefono, self.localidad
-
-    @staticmethod
-    def desde_db(tupla_db):
-        """Crear objeto Cliente desde tupla de base de datos"""
-        # tupla_db: (id, nombre, email, telefono, localidad, direccion, colmenas, renapa, factura, fecha_registro)
-        cliente = Cliente(
-            nombre=tupla_db[1],
-            localidad=tupla_db[4],
-            direccion=tupla_db[5],
-            colmenas=tupla_db[6],
-            renapa=tupla_db[7],
-            factura=bool(tupla_db[8]),
-            id_db=tupla_db[0]
-        )
-        cliente.email = tupla_db[2]
-        cliente.telefono = tupla_db[3]
-        return cliente
-
-
-class Producto:
-    """Modelo de datos para Producto"""
-    contador_id = 1
-
-    def __init__(self, nombre, categoria, precio, stock, codigo=None, id_db=None):
-        self.id_db = id_db
-        self.codigo = codigo if codigo else f"PRD{str(Producto.contador_id).zfill(3)}"
-        if not codigo:
-            Producto.contador_id += 1
-        self.nombre = nombre
-        self.categoria = categoria
-        self.precio = precio
-        self.stock = stock
-
-    def get_datos_tabla(self):
-        """Retorna tupla para mostrar en tabla"""
-        return self.codigo, self.nombre, self.categoria, f"${self.precio:,.2f}", self.stock
-
-    @staticmethod
-    def desde_db(tupla_db):
-        """Crear objeto Producto desde tupla de base de datos"""
-        # tupla_db: (id, codigo, nombre, categoria, precio, stock, fecha_registro)
-        return Producto(
-            nombre=tupla_db[2],
-            categoria=tupla_db[3],
-            precio=tupla_db[4],
-            stock=tupla_db[5],
-            codigo=tupla_db[1],
-            id_db=tupla_db[0]
-        )
-
-
-class Remito:
-    """Modelo de datos para Remito"""
-    contador_id = 1
-
-    def __init__(self, cliente, total, estado="Pendiente", numero=None, fecha=None, id_db=None):
-        self.id_db = id_db
-        self.numero = numero if numero else f"REM-2025-{str(Remito.contador_id).zfill(3)}"
-        if not numero:
-            Remito.contador_id += 1
-        self.fecha = fecha if fecha else datetime.now().strftime("%d/%m/%Y")
-        self.cliente = cliente
-        self.total = total
-        self.estado = estado
-
-    def get_datos_tabla(self):
-        """Retorna tupla para mostrar en tabla"""
-        return self.numero, self.fecha, self.cliente, f"${self.total:,.2f}", self.estado
-
-    @staticmethod
-    def desde_db(tupla_db):
-        """Crear objeto Remito desde tupla de base de datos"""
-        # tupla_db: (id, numero, fecha, nombre_cliente, total, estado)
-        return Remito(
-            cliente=tupla_db[3],
-            total=tupla_db[4],
-            estado=tupla_db[5],
-            numero=tupla_db[1],
-            fecha=tupla_db[2],
-            id_db=tupla_db[0]
-        )
-
-
 # ==================== VENTANAS ====================
 class VentanaNuevoCliente:
     """Ventana para registrar un nuevo cliente"""
@@ -415,7 +316,7 @@ class VentanaNuevoCliente:
     def __init__(self, parent, callback):
         self.callback = callback
         self.ventana = tk.Toplevel(parent)
-        self.ventana.iconbitmap("cliente.ico")
+        self.ventana.iconbitmap("iconos\cliente.ico")
         self.ventana.title("Nuevo Cliente")
         self.ventana.geometry("600x550")
         self.ventana.configure(bg='#fafbfc')
@@ -514,7 +415,6 @@ class VentanaNuevoCliente:
 
         messagebox.showinfo("Éxito", f"Cliente {nombre} registrado correctamente")
         self.ventana.destroy()
-
 
 class VentanaHistorialCliente:
     """Ventana para mostrar el historial de compras de un cliente"""
@@ -833,15 +733,15 @@ class TablaRemitos:
 
 
 # ==================== APLICACIÓN PRINCIPAL ====================
-class AppGestion:
+class Principal:
     """Aplicación principal"""
 
     def __init__(self, root):
         self.ventana = root
-        self.ventana.title("Sistema de gestion - Apicultura Mario Merlo")
+        self.ventana.title("Sistema de gestion de Apicultura")
         self.ventana.state('zoomed')
         self.ventana.configure(bg='#D4A017')  # LÍNEA 677 - Color miel (fondo ventana)
-        self.ventana.iconbitmap("colmena.ico")
+        self.ventana.iconbitmap("iconos\colmena.ico")
 
         # Inicializar base de datos
         self.db = BaseDatos()
@@ -1025,5 +925,5 @@ class AppGestion:
 
 if __name__ == '__main__':
     root = tk.Tk()
-    app = AppGestion(root)
+    app = Principal(root)
     root.mainloop()
