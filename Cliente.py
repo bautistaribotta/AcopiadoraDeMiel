@@ -1,7 +1,7 @@
 class Cliente:
     """Modelo de datos para Cliente"""
 
-    def __init__(self, nombre, email, localidad, telefono ,direccion="",
+    def __init__(self, nombre, email, localidad, telefono, direccion="",
                  colmenas=0, renapa="", factura=False, id_db=None):
         self.id_db = id_db  # ID de la base de datos
         self.nombre = nombre
@@ -24,8 +24,8 @@ class Cliente:
         cliente = Cliente(
             nombre=tupla_db[1],
             email=tupla_db[2],
-            localidad=tupla_db[3],
-            telefono=tupla_db[4],
+            telefono=tupla_db[3],
+            localidad=tupla_db[4],
             direccion=tupla_db[5],
             colmenas=tupla_db[6],
             renapa=tupla_db[7],

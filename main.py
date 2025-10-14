@@ -318,7 +318,7 @@ class VentanaNuevoCliente:
         self.ventana = tk.Toplevel(parent)
         self.ventana.iconbitmap("iconos\cliente.ico")
         self.ventana.title("Nuevo Cliente")
-        self.ventana.geometry("600x550")
+        self.ventana.geometry("600x650")  # Aumentado para más campos
         self.ventana.configure(bg='#fafbfc')
         self.ventana.resizable(False, False)
 
@@ -326,49 +326,50 @@ class VentanaNuevoCliente:
 
     def crear_interfaz(self):
         # Header
-        header = tk.Frame(self.ventana, bg='#D4A017',
-                          height=70)  # LÍNEA 233 - Color miel (header ventana nuevo cliente)
+        header = tk.Frame(self.ventana, bg='#D4A017', height=70)
         header.pack(fill='x')
         header.pack_propagate(False)
 
         tk.Label(header, text="Registrar Nuevo Cliente",
                  font=('Segoe UI', 16, 'bold'),
-                 bg='#D4A017', fg='white').pack(pady=20, padx=30, anchor='w')  # LÍNEA 239 - Color miel (bg label)
+                 bg='#D4A017', fg='white').pack(pady=20, padx=30, anchor='w')
 
         # Formulario
         form_frame = tk.Frame(self.ventana, bg='white')
         form_frame.pack(fill='both', expand=True, padx=30, pady=30)
 
-        # Campos
+        # Campos - AHORA CON TODOS LOS ATRIBUTOS
         self.entry_nombre = self.crear_campo(form_frame, "Nombre Completo:", 0)
-        self.entry_localidad = self.crear_campo(form_frame, "Localidad:", 1)
-        self.entry_direccion = self.crear_campo(form_frame, "Calle y Altura:", 2)
-        self.entry_colmenas = self.crear_campo(form_frame, "Cantidad de Colmenas:", 3)
-        self.entry_renapa = self.crear_campo(form_frame, "Código de RENAPA:", 4)
+        self.entry_email = self.crear_campo(form_frame, "Email:", 1)
+        self.entry_telefono = self.crear_campo(form_frame, "Teléfono:", 2)
+        self.entry_localidad = self.crear_campo(form_frame, "Localidad:", 3)
+        self.entry_direccion = self.crear_campo(form_frame, "Calle y Altura:", 4)
+        self.entry_colmenas = self.crear_campo(form_frame, "Cantidad de Colmenas:", 5)
+        self.entry_renapa = self.crear_campo(form_frame, "Código de RENAPA:", 6)
 
         # Radio buttons para facturación
         tk.Label(form_frame, text="Factura Producción:",
                  font=('Segoe UI', 10, 'bold'),
-                 bg='white', fg='#333').grid(row=5, column=0, sticky='w', pady=(10, 5))
+                 bg='white', fg='#333').grid(row=7, column=0, sticky='w', pady=(10, 5))
 
         self.factura_var = tk.StringVar(value="No")
         radio_frame = tk.Frame(form_frame, bg='white')
-        radio_frame.grid(row=5, column=1, sticky='w', pady=(10, 5))
+        radio_frame.grid(row=7, column=1, sticky='w', pady=(10, 5))
 
         tk.Radiobutton(radio_frame, text="Sí", variable=self.factura_var, value="Sí",
                        font=('Segoe UI', 10), bg='white', activebackground='white',
-                       selectcolor='#D4A017').pack(side='left', padx=(0, 20))  # LÍNEA 264 - Color miel (radio button)
+                       selectcolor='#D4A017').pack(side='left', padx=(0, 20))
 
         tk.Radiobutton(radio_frame, text="No (NN)", variable=self.factura_var, value="No",
                        font=('Segoe UI', 10), bg='white', activebackground='white',
-                       selectcolor='#D4A017').pack(side='left')  # LÍNEA 268 - Color miel (radio button)
+                       selectcolor='#D4A017').pack(side='left')
 
         # Botones
         btn_frame = tk.Frame(form_frame, bg='white')
-        btn_frame.grid(row=6, column=0, columnspan=2, pady=(30, 0))
+        btn_frame.grid(row=8, column=0, columnspan=2, pady=(30, 0))
 
         tk.Button(btn_frame, text='💾 Guardar Cliente',
-                  font=('Segoe UI', 10, 'bold'), bg='#D4A017', fg='white',  # LÍNEA 273 - Color miel (botón guardar)
+                  font=('Segoe UI', 10, 'bold'), bg='#D4A017', fg='white',
                   relief='flat', padx=20, pady=10, cursor='hand2',
                   command=self.guardar_cliente).pack(side='left', padx=5)
 
@@ -387,13 +388,17 @@ class VentanaNuevoCliente:
         return entry
 
     def guardar_cliente(self):
+        # Obtener todos los valores
         nombre = self.entry_nombre.get().strip()
+        email = self.entry_email.get().strip()
+        telefono = self.entry_telefono.get().strip()
         localidad = self.entry_localidad.get().strip()
         direccion = self.entry_direccion.get().strip()
         colmenas = self.entry_colmenas.get().strip()
         renapa = self.entry_renapa.get().strip()
         factura = self.factura_var.get() == "Sí"
 
+        # Validaciones
         if not nombre:
             messagebox.showwarning("Advertencia", "El nombre es obligatorio")
             return
@@ -402,13 +407,22 @@ class VentanaNuevoCliente:
             messagebox.showwarning("Advertencia", "La localidad es obligatoria")
             return
 
-        # Crear objeto Cliente
+        # Crear objeto Cliente con el orden correcto de parámetros
         try:
             colmenas_num = int(colmenas) if colmenas else 0
         except ValueError:
             colmenas_num = 0
 
-        cliente = Cliente(nombre, localidad, direccion, colmenas_num, renapa, factura)
+        cliente = Cliente(
+            nombre=nombre,
+            email=email,
+            localidad=localidad,
+            telefono=telefono,
+            direccion=direccion,
+            colmenas=colmenas_num,
+            renapa=renapa,
+            factura=factura
+        )
 
         # Llamar al callback para agregar a la tabla y BD
         self.callback(cliente)
