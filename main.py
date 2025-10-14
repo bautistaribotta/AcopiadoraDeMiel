@@ -634,6 +634,43 @@ class TablaClientes:
             cliente = self.clientes[index]
             self.on_doble_click(cliente)
 
+    def eliminar_cliente_seleccionado(self):
+        """Eliminar el cliente seleccionado"""
+        seleccion = self.tabla.selection()
+        if not seleccion:
+            messagebox.showwarning("Advertencia", "Por favor, seleccione un cliente para eliminar")
+            return
+
+        # Obtener índice del item seleccionado
+        item_id = seleccion[0]
+        index = self.tabla.index(item_id)
+
+        # Obtener el objeto Cliente correspondiente
+        if 0 <= index < len(self.clientes):
+            cliente = self.clientes[index]
+
+            # Confirmar eliminación
+            respuesta = messagebox.askyesno(
+                "Confirmar eliminación",
+                f"¿Está seguro de eliminar al cliente '{cliente.nombre}'?\n\n"
+                f"Esta acción no se puede deshacer."
+            )
+
+            if respuesta:
+                try:
+                    # Eliminar de la base de datos
+                    self.db.eliminar_cliente(cliente.id_db)
+
+                    # Eliminar de la lista
+                    self.clientes.pop(index)
+
+                    # Eliminar de la tabla
+                    self.tabla.delete(item_id)
+
+                    messagebox.showinfo("Éxito", f"Cliente '{cliente.nombre}' eliminado correctamente")
+                except Exception as e:
+                    messagebox.showerror("Error", f"No se pudo eliminar el cliente:\n{str(e)}")
+
     def pack(self, **kwargs):
         self.frame.pack(**kwargs)
 
@@ -836,7 +873,8 @@ class Principal:
                    style='Secondary.TButton').pack(side='left', padx=5)
 
         ttk.Button(toolbar, text='🗑️ Eliminar',
-                   style='Secondary.TButton').pack(side='left', padx=5)
+                   style='Secondary.TButton',
+                   command=self.eliminar_cliente).pack(side='left', padx=5)
 
         search_frame = tk.Frame(toolbar, bg='white')
         search_frame.pack(side='right', padx=10, fill='x', expand=True)
@@ -922,6 +960,9 @@ class Principal:
         """Abrir ventana de historial de un cliente"""
         VentanaHistorialCliente(self.ventana, cliente, self.db)
 
+    def eliminar_cliente(self):
+        """Eliminar cliente seleccionado"""
+        self.tabla_clientes.eliminar_cliente_seleccionado()
 
 if __name__ == '__main__':
     root = tk.Tk()
