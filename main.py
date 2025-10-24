@@ -812,7 +812,7 @@ class Principal:
         header_frame.pack(fill='x')
         header_frame.pack_propagate(False)
 
-        tk.Label(header_frame, text="Sistema de gestion Apicultor - Mario Merlo",
+        tk.Label(header_frame, text="Sistema de gestion Apicultor",
                  font=('Segoe UI', 18, 'bold'),
                  bg='#D4A017', fg='white').pack(side='left', padx=30, pady=20)
 
