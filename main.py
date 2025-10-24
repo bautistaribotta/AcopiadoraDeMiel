@@ -5,7 +5,17 @@ from Remito import Remito
 from tkinter import ttk, messagebox
 from datetime import datetime
 import sqlite3
+import os
+import sys
 
+# Es para que funcione el ejecutable y tenga en cuenta los iconos
+def resource_path(relative_path):
+    """Obtener la ruta absoluta del recurso"""
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 # ==================== BASE DE DATOS ====================
 class BaseDatos:
@@ -315,7 +325,7 @@ class VentanaNuevoCliente:
     def __init__(self, parent, callback):
         self.callback = callback
         self.ventana = tk.Toplevel(parent)
-        self.ventana.iconbitmap("iconos\cliente.ico")
+        self.ventana.iconbitmap(resource_path("iconos/cliente.ico"))
         self.ventana.title("Nuevo Cliente")
         self.ventana.geometry("600x650")
         self.ventana.configure(bg='#fafbfc')
@@ -751,7 +761,7 @@ class Principal:
         self.ventana.title("Sistema de gestion de Apicultura")
         self.ventana.state('zoomed')
         self.ventana.configure(bg='#D4A017')
-        self.ventana.iconbitmap("iconos\colmena.ico")
+        self.ventana.iconbitmap(resource_path("iconos/colmena.ico"))
 
         self.db = BaseDatos()
 
