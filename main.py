@@ -118,28 +118,6 @@ class Principal:
         self.crear_header()
         self.crear_pestanas()
 
-    def crear_header(self):
-        header_frame = tk.Frame(self.ventana, bg='#D4A017', height=70)
-        header_frame.pack(fill='x')
-        header_frame.pack_propagate(False)
-
-        tk.Label(header_frame, text="Sistema de gestion Apicultor",
-                 font=('Segoe UI', 18, 'bold'),
-                 bg='#D4A017', fg='white').pack(side='left', padx=30, pady=20)
-
-        btn_frame = tk.Frame(header_frame, bg='#D4A017')
-        btn_frame.pack(side='right', padx=30)
-
-        tk.Button(btn_frame, text="⚙️ Configuración",
-                  bg='#C4911A', fg='white', font=('Segoe UI', 9),
-                  relief='flat', padx=15, pady=5,
-                  cursor='hand2').pack(side='left', padx=5)
-
-        tk.Button(btn_frame, text="👤 Usuario",
-                  bg='#C4911A', fg='white', font=('Segoe UI', 9),
-                  relief='flat', padx=15, pady=5,
-                  cursor='hand2').pack(side='left', padx=5)
-
     def crear_pestanas(self):
         container = tk.Frame(self.ventana, bg='#D4A017')
         container.pack(fill='both', expand=True, padx=2, pady=2)

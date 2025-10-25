@@ -20,7 +20,7 @@ class Producto:
     def desde_db(tupla_db):
         """Crear objeto Producto desde tupla de base de datos"""
         # tupla_db: (id, codigo, nombre, categoria, precio, stock, fecha_registro)
-        return Producto(
+        producto = Producto(
             nombre=tupla_db[2],
             categoria=tupla_db[3],
             precio=tupla_db[4],
@@ -29,3 +29,9 @@ class Producto:
             id_db=tupla_db[0]
         )
 
+        # Actualizar el contador si este ID es mayor
+        num_actual = int(tupla_db[1].replace('PRD', ''))
+        if num_actual >= Producto.contador_id:
+            Producto.contador_id = num_actual + 1
+
+        return producto

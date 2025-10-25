@@ -22,7 +22,7 @@ class Remito:
     def desde_db(tupla_db):
         """Crear objeto Remito desde tupla de base de datos"""
         # tupla_db: (id, numero, fecha, nombre_cliente, total, estado)
-        return Remito(
+        remito = Remito(
             cliente=tupla_db[3],
             total=tupla_db[4],
             estado=tupla_db[5],
@@ -30,3 +30,11 @@ class Remito:
             fecha=tupla_db[2],
             id_db=tupla_db[0]
         )
+
+        # Actualizar el contador si este ID es mayor
+        # Formato: REM-2025-XXX
+        num_actual = int(tupla_db[1].split('-')[-1])
+        if num_actual >= Remito.contador_id:
+            Remito.contador_id = num_actual + 1
+
+        return remito
