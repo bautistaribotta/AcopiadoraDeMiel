@@ -41,7 +41,7 @@ class VentanaLogin:
         width = self.ventana.winfo_width()
         height = self.ventana.winfo_height()
         x = (self.ventana.winfo_screenwidth() // 2) - (width // 2)
-        y = (self.ventana.winfo_screenheight() // 2) - (height // 2)
+        y = (self.ventana.winfo_screenheight() // 2) - (height // 2 + 40)
         self.ventana.geometry(f'{width}x{height}+{x}+{y}')
 
     def crear_interfaz(self):
