@@ -4,6 +4,7 @@ from Producto import Producto
 from Remito import Remito
 from tkinter import ttk, messagebox
 from datetime import datetime
+from Login import VentanaLogin
 import sqlite3
 import os
 import sys
@@ -756,8 +757,9 @@ class TablaRemitos:
 class Principal:
     """Aplicación principal"""
 
-    def __init__(self, root):
+    def __init__(self, root, tipo_usuario):
         self.ventana = root
+        self.tipo_usuario = tipo_usuario  # GUARDAR EL TIPO DE USUARIO
         self.ventana.title("Sistema de gestion de Apicultura")
         self.ventana.state('zoomed')
         self.ventana.configure(bg='#D4A017')
@@ -767,6 +769,48 @@ class Principal:
 
         self.configurar_estilos()
         self.crear_interfaz()
+
+    def crear_header(self):
+        header_frame = tk.Frame(self.ventana, bg='#D4A017', height=70)
+        header_frame.pack(fill='x')
+        header_frame.pack_propagate(False)
+
+        tk.Label(header_frame, text="Sistema de gestion Apicultor",
+                 font=('Segoe UI', 18, 'bold'),
+                 bg='#D4A017', fg='white').pack(side='left', padx=30, pady=20)
+
+        btn_frame = tk.Frame(header_frame, bg='#D4A017')
+        btn_frame.pack(side='right', padx=30)
+
+        # MOSTRAR EL TIPO DE USUARIO
+        tipo_usuario_texto = "👤 Usuario" if self.tipo_usuario == "usuario" else "🔐 Administrador"
+        tk.Label(btn_frame, text=tipo_usuario_texto,
+                 bg='#C4911A', fg='white', font=('Segoe UI', 9, 'bold'),
+                 relief='flat', padx=15, pady=5).pack(side='left', padx=5)
+
+        tk.Button(btn_frame, text="⚙️ Configuración",
+                  bg='#C4911A', fg='white', font=('Segoe UI', 9),
+                  relief='flat', padx=15, pady=5,
+                  cursor='hand2').pack(side='left', padx=5)
+
+        # BOTÓN PARA CERRAR SESIÓN
+        tk.Button(btn_frame, text="🚪 Cerrar Sesión",
+                  bg='#C4911A', fg='white', font=('Segoe UI', 9),
+                  relief='flat', padx=15, pady=5,
+                  cursor='hand2',
+                  command=self.cerrar_sesion).pack(side='left', padx=5)
+
+
+    def cerrar_sesion(self):
+        """Cerrar sesión y volver al login"""
+        respuesta = messagebox.askyesno(
+            "Cerrar Sesión",
+            "¿Está seguro que desea cerrar sesión?"
+        )
+        if respuesta:
+            self.ventana.destroy()
+            iniciar_aplicacion()  # Volver a mostrar el login
+
 
     def configurar_estilos(self):
         style = ttk.Style()
@@ -963,7 +1007,18 @@ class Principal:
                     self.tabla_clientes.tabla.insert('', 'end', values=cliente.get_datos_tabla())
 
 
+def iniciar_aplicacion():
+    """Función para iniciar la aplicación con login"""
+
+    def callback_login_exitoso(tipo_usuario):
+        """Callback cuando el login es exitoso"""
+        root = tk.Tk()
+        app = Principal(root, tipo_usuario)
+        root.mainloop()
+
+    # Mostrar ventana de login
+    login = VentanaLogin(callback_login_exitoso)
+    login.iniciar()
+
 if __name__ == '__main__':
-    root = tk.Tk()
-    app = Principal(root)
-    root.mainloop()
+    iniciar_aplicacion()
