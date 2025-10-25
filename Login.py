@@ -55,7 +55,7 @@ class VentanaLogin:
         header_content.place(relx=0.5, rely=0.5, anchor='center')
 
         # Icono y título
-        tk.Label(header_content, text="🐝", font=('Segoe UI', 45),
+        tk.Label(header_content, font=('Segoe UI', 45),
                  bg='#D4A017', fg='white').pack(pady=(0, 5))
 
         tk.Label(header_content, text="Sistema de Gestión Apícola",

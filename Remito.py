@@ -1,3 +1,5 @@
+from datetime import *
+
 class Remito:
     """Modelo de datos para Remito"""
     contador_id = 1
